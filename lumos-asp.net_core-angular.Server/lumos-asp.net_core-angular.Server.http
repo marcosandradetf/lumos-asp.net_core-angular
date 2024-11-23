@@ -1,0 +1,6 @@
+@lumos_asp.net_core_angular.Server_HostAddress = http://localhost:5056
+
+GET {{lumos_asp.net_core_angular.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
