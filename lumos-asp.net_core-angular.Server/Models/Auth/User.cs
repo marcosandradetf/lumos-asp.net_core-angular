@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace lumos_asp.net_core_angular.Server.Models.Auth
 {
-    [Table("tb_users")]
     public class User
     {
 
@@ -17,8 +16,7 @@ namespace lumos_asp.net_core_angular.Server.Models.Auth
         public string Email { get; set; }
         public string Password { get; set; }
         public DateTime? DateOfBirth { get; set; }
-
-        public List<UserRole> UserRoles { get; } = [];
+        public List<Role> Roles { get; set; } = [];
         public ICollection<RefreshToken> RefreshTokens { get; } = new List<RefreshToken>();
 
         public bool IsLoginCorrect(string providedPassword)

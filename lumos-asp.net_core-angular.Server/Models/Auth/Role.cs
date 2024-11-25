@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace lumos_asp.net_core_angular.Server.Models.Auth
 {
-    [Table("tb_roles")]
     public class Role
     {
         [Key]
         public Guid RoleId { get; set; }
-        public int RoleEnum { get; set; }
-        public List<UserRole> UserRoles { get; } = [];
+        public Values RoleEnum { get; set; }
+        public ICollection<User> Users { get; set; } = [];
         public enum Values
         {
             ADMIN = 1,

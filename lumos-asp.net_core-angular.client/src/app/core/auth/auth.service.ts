@@ -10,7 +10,7 @@ import {routes} from '../../app.routes';
 })
 export class AuthService {
   //private apiUrl = 'http://localhost:8080/api/auth';
-  private apiUrl = 'http://localhost:7132/api/auth';
+  private apiUrl = 'https://localhost:7132/api/auth';
   public isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.hasTokens());
   public isLoading$ = new BehaviorSubject<boolean>(true); // status de carregamento
 
@@ -42,10 +42,11 @@ export class AuthService {
     return this.isLoggedInSubject.asObservable();
   }
 
-  login(username: string, password: string) { // Retorna um Observable
-    return this.http.post<any>(this.apiUrl + '/login', { username, password }, { withCredentials: true }).pipe(
+  login(usernameOrEmail: string, password: string) { // Retorna um Observable
+    return this.http.post<any>('/api/auth/login', { usernameOrEmail, password }, { withCredentials: true }).pipe(
+    //return this.http.post<any>(this.apiUrl + '/login', { username, password }, { withCredentials: true }).pipe(
       tap(response => {
-        this.user.initialize(username, response.accessToken, response.scopes);
+        this.user.initialize(usernameOrEmail, response.accessToken, response.scopes);
         localStorage.setItem('user', JSON.stringify(this.user));
         this.isLoggedInSubject.next(true);
       }),
@@ -57,7 +58,8 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.post(this.apiUrl + '/logout', {}, { withCredentials: true }).pipe(
+    //return this.http.post(this.apiUrl + '/logout', {}, { withCredentials: true }).pipe(
+    return this.http.post('/api/auth/logout', {}, { withCredentials: true }).pipe(
       tap(() => {
         this.user?.clearToken();
         localStorage.removeItem('user');

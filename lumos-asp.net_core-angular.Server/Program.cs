@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text.Json;
 using lumos_asp.net_core_angular.Server.Repositories.Auth;
+using lumos_asp.net_core_angular.Server.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -16,6 +17,27 @@ var connectionString =
         ?? throw new InvalidOperationException("Connection string"
         + "'DefaultConnection' not found.");
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AngularAppAspNet", policy =>
+//    {
+//        policy.WithOrigins("http://localhost:4200") // Permite o frontend rodando em localhost:4200
+//              .AllowAnyMethod()  // Permite qualquer método HTTP (GET, POST, etc.)
+//              .AllowAnyHeader()  // Permite qualquer cabeçalho
+//              .AllowCredentials();  // Permite credenciais (cookies, autenticação, etc.)
+//    });
+//});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularAppAspNet", policy =>
+    {
+        policy.WithOrigins("http://localhost:60867") // Permite o frontend rodando em localhost:60867
+              .AllowAnyMethod()  // Permite qualquer método HTTP (GET, POST, etc.)
+              .AllowAnyHeader()  // Permite qualquer cabeçalho
+              .AllowCredentials();  // Permite credenciais (cookies, autenticação, etc.)
+    });
+});
 
 // Configuration for jwt with rsa
 builder.Services.AddSingleton<RsaKeyService>(serviceProvider =>
@@ -67,14 +89,32 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<SecurityConfig>();
+
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var securityConfig = services.GetRequiredService<SecurityConfig>();
+    try
+    {
+        // Aguarde a execução do método de inicialização
+        await securityConfig.InitializeAsync();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Erro ao inicializar SecurityConfig: {ex.Message}");
+    }
+}
+
+//app.UseCors("AngularApp");
+//app.UseRouting();
+app.UseCors("AngularAppAspNet");
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
-app.UseCors(policy =>
-    policy.AllowAnyOrigin()
-          .AllowAnyMethod()
-          .AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -83,13 +123,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
-
 app.MapControllers();
+
+app.MapFallbackToFile("/index.html");
 
 app.Run();

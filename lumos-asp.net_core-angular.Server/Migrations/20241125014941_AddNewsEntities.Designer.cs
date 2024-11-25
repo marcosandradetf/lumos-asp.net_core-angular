@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using lumos_asp.net_core_angular.Server.Data;
 
@@ -11,9 +12,11 @@ using lumos_asp.net_core_angular.Server.Data;
 namespace lumos_asp.net_core_angular.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125014941_AddNewsEntities")]
+    partial class AddNewsEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace lumos_asp.net_core_angular.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("tb_refresh_token");
                 });
 
             modelBuilder.Entity("lumos_asp.net_core_angular.Server.Models.Auth.Role", b =>
@@ -106,7 +109,7 @@ namespace lumos_asp.net_core_angular.Server.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("tb_roles");
                 });
 
             modelBuilder.Entity("lumos_asp.net_core_angular.Server.Models.Auth.User", b =>
@@ -133,7 +136,7 @@ namespace lumos_asp.net_core_angular.Server.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("tb_users");
                 });
 
             modelBuilder.Entity("lumos_asp.net_core_angular.Server.Models.Contract.Contract", b =>
@@ -290,7 +293,7 @@ namespace lumos_asp.net_core_angular.Server.Migrations
 
                     b.HasIndex("MaterialId");
 
-                    b.ToTable("Items");
+                    b.ToTable("tb_items");
                 });
 
             modelBuilder.Entity("lumos_asp.net_core_angular.Server.Models.Execution.MaterialReservation", b =>
@@ -341,7 +344,7 @@ namespace lumos_asp.net_core_angular.Server.Migrations
 
                     b.HasKey("IdMeasurement");
 
-                    b.ToTable("PreMeasurements");
+                    b.ToTable("tb_PreMeasurement");
                 });
 
             modelBuilder.Entity("lumos_asp.net_core_angular.Server.Models.Execution.Street", b =>
@@ -377,7 +380,7 @@ namespace lumos_asp.net_core_angular.Server.Migrations
 
                     b.HasKey("IdTeam");
 
-                    b.ToTable("Teams");
+                    b.ToTable("tb_team");
                 });
 
             modelBuilder.Entity("lumos_asp.net_core_angular.Server.Models.Stock.Company", b =>

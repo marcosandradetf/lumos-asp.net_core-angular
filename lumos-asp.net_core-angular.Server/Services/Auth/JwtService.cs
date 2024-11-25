@@ -26,7 +26,7 @@ namespace lumos_asp.net_core_angular.Server.Services.Auth
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, issuedAt.ToString()),
-                new Claim("scope", string.Join(" ", user.UserRoles.Select(r => r.Role.RoleEnum)))
+                new Claim("scope", string.Join(" ", user.Roles.Select(r => r.RoleEnum)))
             };
 
             var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.RsaSha256);

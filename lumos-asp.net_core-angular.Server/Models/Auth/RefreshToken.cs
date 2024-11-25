@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace lumos_asp.net_core_angular.Server.Models.Auth
 {
-    [Table("tb_refresh_token")]
     public class RefreshToken
     {
         [Key]

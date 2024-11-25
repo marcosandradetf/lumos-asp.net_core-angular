@@ -4,6 +4,7 @@ namespace lumos_asp.net_core_angular.Server.Repositories.Auth
 {
     public interface IUserRepository
     {
-        Task<User> findByUsernameOrEmail(string usernameOrEmail);
+        Task<User> FindByUsernameOrEmailAsync(string usernameOrEmail);
+        Task AddAsync(User user);
     }
 }

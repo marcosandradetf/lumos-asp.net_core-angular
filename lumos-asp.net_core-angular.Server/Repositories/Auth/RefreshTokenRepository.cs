@@ -35,9 +35,15 @@ namespace lumos_asp.net_core_angular.Server.Repositories.Auth
             await _context.SaveChangesAsync();
         }
 
-        Task<RefreshToken> IRefreshTokenRepository.FindByTokenAsync(string token)
+        async Task<RefreshToken> IRefreshTokenRepository.FindByTokenAsync(string token)
         {
-            throw new NotImplementedException();
+            var refreshToken = await _context.RefreshTokens
+                .FirstOrDefaultAsync(r => r.Token == token);
+            
+            if (refreshToken == null)
+                throw new NotImplementedException();
+
+            return refreshToken;
         }
 
         Task IRefreshTokenRepository.DeleteByUserAsync(Guid userId)

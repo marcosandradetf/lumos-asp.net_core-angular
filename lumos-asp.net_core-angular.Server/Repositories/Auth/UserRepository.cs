@@ -8,13 +8,15 @@ namespace lumos_asp.net_core_angular.Server.Repositories.Auth
     {
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<User> findByUsernameOrEmail(string usernameOrEmail)
+        public async Task<User> FindByUsernameOrEmailAsync(string usernameOrEmail)
         {
             var user = await _context.Users
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u  => u.Username == usernameOrEmail);
 
             if (user == null)
                 user = await _context.Users
+                .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.Email == usernameOrEmail);
 
             if (user == null)
@@ -23,5 +25,13 @@ namespace lumos_asp.net_core_angular.Server.Repositories.Auth
             return user;
 
         }
+
+        async Task IUserRepository.AddAsync(User user)
+        {
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+
     }
 }

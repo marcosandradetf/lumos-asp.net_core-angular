@@ -28,19 +28,12 @@ namespace lumos_asp.net_core_angular.Server.Controllers
         private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
         private IConfiguration _config = config;
 
-        [AllowAnonymous]
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            return Ok(new { message = "API funcionando!" });
-        }
-
 
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
         {
-            var user = await _userRepository.findByUsernameOrEmail(loginRequest.usernameOrEmail);
+            var user = await _userRepository.FindByUsernameOrEmailAsync(loginRequest.usernameOrEmail);
             if (user == null || !user.IsLoginCorrect(loginRequest.password))
             {
                 return Unauthorized("Usuário/email ou senha incorretos");
@@ -78,11 +71,11 @@ namespace lumos_asp.net_core_angular.Server.Controllers
             {
                 AccessToken = accessToken,
                 ExpiresIn = (long)accessTokenExpiresIn.TotalSeconds,
-                Roles = string.Join(" ", user.UserRoles.Select(r => r.Role.RoleEnum))
+                Roles = string.Join(" ", user.Roles.Select(r => r.RoleEnum))
             });
         }
 
-
+        [AllowAnonymous]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromHeader(Name = "Cookie")] string cookies)
         {
@@ -135,7 +128,7 @@ namespace lumos_asp.net_core_angular.Server.Controllers
             {
                 AccessToken = newAccessTooken,
                 ExpiresIn = (long)expiresIn.TotalSeconds,
-                Roles = string.Join(" ", user.UserRoles.Select(r => r.Role.RoleEnum))
+                Roles = string.Join(" ", user.Roles.Select(r => r.RoleEnum))
             });
         }
 
